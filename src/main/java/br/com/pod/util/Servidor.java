@@ -13,22 +13,22 @@ import java.util.logging.Logger;
  *
  * @author filipe
  */
-public class ChatServer {
+public class Servidor {
 
     ArrayList<PrintWriter> writers = new ArrayList<PrintWriter>();
 
-    public ChatServer() {
+    public Servidor() {
         ServerSocket server;
         try {
             server = new ServerSocket(9999);
             while (true) {
                 Socket socket = server.accept();
-                new Thread(new EscutaCliente(socket)).start();
+                new Thread(new ListenerCliente(socket)).start();
                 PrintWriter p = new PrintWriter(socket.getOutputStream());
                 writers.add(p);
             }
         } catch (IOException ex) {
-            Logger.getLogger(ChatServer.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -40,15 +40,15 @@ public class ChatServer {
 
     }
 
-    private class EscutaCliente implements Runnable {
+    private class ListenerCliente implements Runnable {
 
         Scanner write;
 
-        public EscutaCliente(Socket socket) {
+        public ListenerCliente(Socket socket) {
             try {
                 write = new Scanner(socket.getInputStream());
             } catch (IOException ex) {
-                Logger.getLogger(ChatServer.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
@@ -62,6 +62,6 @@ public class ChatServer {
     }
 
     public static void main(String[] args) {
-        new ChatServer();
+        new Servidor();
     }
 }
